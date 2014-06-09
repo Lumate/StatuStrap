@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="adtrade status">
+    <meta name="author" content="lumate">
+
+    <title>System Status</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="custom.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="../../assets/js/html5shiv.js"></script>
+      <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
+    
+    <script type="text/javascript">
+        function component_status(component) {
+            var xmlhttp;
+            if (!document.getElementById(component[0])) {
+                var current_div = document.createElement('div');
+                current_div.setAttribute("id", component[0]);
+                var status_area = document.getElementById("status_banners")
+                status_area.appendChild(current_div)
+            } else {
+                var current_div = document.getElementById(component[0]);
+            }
+            xmlhttp=new XMLHttpRequest();
+            xmlhttp.open("GET", component[1], true);
+            xmlhttp.send();
+            xmlhttp.onreadystatechange=function() {
+              //alert(xmlhttp.status);
+              if (xmlhttp.readyState==4) {
+                if (xmlhttp.status==200) {
+                  if (xmlhttp.responseText=="healthy"||xmlhttp.responseText=="healthy\n") {
+                    current_div.innerHTML=component[2]+": ON";
+                    current_div.className = "alert "+status_classes["success"];
+                  }
+                  else {
+                    current_div.innerHTML=component[2]+": RESPONDING";
+                    current_div.className = "alert "+status_classes["info"];
+                  }
+                }
+                else {
+                  current_div.innerHTML=component[2]+": FAILED";
+                  current_div.className = "alert "+status_classes["danger"];
+                }
+              }
+              else {
+                current_div.innerHTML=component[2]+": UNKNOWN";
+                current_div.className = "alert "+status_classes["warning"];
+              }
+            }
+        }
+        var components = [ 
+            ["s3_bucket_status", "https://s3.amazonaws.com/customer_campaigns/iurls/", "S3 Bucket Status"]
+        ];
+        var status_classes = { 
+            "success":"alert-success",
+            "info":"alert-info",
+            "warning":"alert-warning",
+            "danger":"alert-danger"
+        };
+        function check_status(){
+            for (var i = 0; i < components.length; i++) {
+                component_status(components[i]);
+            }
+        }
+    </script>
+    
+  </head>
+
+  <body ng-app onload="check_status()">
+
+    <!-- Wrap all page content here -->
+    <div id="wrap">
+      <!-- Page content -->
+      
+      <!-- Begin menu -->
+            <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Status</a>
+          </div>
+          <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="http://lumate.com">Lumate</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+
+    
+      <!-- Begin page content -->
+      <div class="container">
+      
+        <div class="imgheader jumbotron">
+          <img src="promo2_1400-560.png" style="width:100%;" />
+          <div class="text-container">System Status</div>
+        </div>
+        
+        <div id="status_banners">
+        </div>
+
+      </div>
+    
+    </div>
+
+    <div id="footer">
+      <div class="container container-black">
+        <p class="text-muted credit">Service provided by <a href="http://lumate.com">Lumate, LLC</a></p>
+      </div>
+      <div class="container-grey">
+      <div class="container">
+        <div id="footer-widgets" class="full-container">
+        <div class="textwidget">
+        <h1 class="widget-title">Headquarters </h1>
+        <p>
+        1112 Olive Street<br>
+        Suite 300<br>
+        Saint Louis, Missouri 63101</p>
+        </div>
+        <div class="textwidget">
+        <h1 class="widget-title">Rolla Branch</h1>
+        <p>
+        900 Innovation Drive<br>
+        Suite 120<br>
+        Rolla, Missouri 65401</p>
+        </div>
+        <div class="textwidget">
+        <h1 class="widget-title">Contact</h1>
+        <p>
+        Inquiries@lumate.com<br>
+        Phone: (888) 221 2791<br>
+        Fax: (888) 221 2791</p>
+        </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </body>
+</html>
